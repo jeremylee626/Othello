@@ -1,0 +1,22 @@
+CS5001 HW7 - ai.txt
+Fall 2018
+Jeremy Lee
+12/2/18
+
+Question 1: Did you attempt to make your computer player very smart?
+Yes, I attempted to make the computer pick it's move based on the number of tiles that
+would flip as a result of the move. 
+
+Question 2: Were you able to accomplish this? Is your computer player as smart as you
+would like?
+Yes, the computer successfully chooses the 'best' move based on how many tiles each legal move will flip. However, there is room for improvement (See question 5).
+
+Question 3: How did you (the computer) determine which piece to play next?
+The computer picks it's move by iterating through each legal move available and identifying the move that results in the largest number of tile flips. This was accomplished by storing legal moves as LegalMove objects, which contain a tile to be played and a list of indices of the existing game tiles that would flip. To find each legal move and the 'flip indices', a separate find_legal_moves method was used. This method loops through each existing tile of an input color and scans the board in each direction for a square where a tile can be legally played. The indices of the tiles that will flip are stored in a list as the method/algorithm traverses through the board and eventually input into a new Legal Move object. The method then returns a list of Legal Move objects.
+
+Question 4: How often did your computer program beat you?
+The computer beat me in ~80% of the games I played. 
+
+Question 5: How would you improve it in the future?
+After testing the game multiple times, I realized the computer algorithm isn't perfect because it does not account for the player's move. This means that the computer's move can be easily countered in some cases. For example, if the computer makes a move that flips 10 tiles, but the player has a legal move that can re-flip those 10 tiles on the following turn, the computer's turn is not optimal. This could be fixed in the best move algorithm by adjusting the flip tiles count based on the player's best move. This would ensure the computer makes the move with the highest net tile flips. 
+

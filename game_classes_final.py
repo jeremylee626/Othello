@@ -91,6 +91,9 @@ class Game:
                            "down_right": [-1, 1],
                            "down_left": [-1, -1]}
         self.final_player_score = 0
+        self.player_score_turtle = turtle.Turtle()
+        self.comp_score_turtle = turtle.Turtle()
+        self.turn_turtle = turtle.Turtle()
 
     # Game methods -----------------------------------------------------------
     def draw_board(self):
@@ -99,8 +102,12 @@ class Game:
             Returns: nothing
             Does: Draws an nxn board with a green background
         '''
+        self.player_score_turtle.hideturtle()
+        self.comp_score_turtle.hideturtle()
+        self.turn_turtle.hideturtle()
+        
         turtle.setup(self.n * self.square_size + self.square_size, \
-                     self.n * self.square_size + self.square_size)
+                     self.n * self.square_size + self.square_size + 40)
         turtle.screensize(self.n * self.square_size, self.n * self.square_size)
         turtle.bgcolor('white')
 
@@ -135,6 +142,77 @@ class Game:
             othello.setposition(self.square_size * i + corner, corner)
             self.draw_lines(othello)
 
+    def update_scores(self):
+        '''
+        name: update_scores
+        inputs: self (Game object)
+        returns: nothing
+        does: Writes the current scores for the computer and player above the board
+        '''
+        # Erase previous scores
+        self.comp_score_turtle.undo()
+        self.player_score_turtle.undo()
+
+        # Move turtle to top left corner
+        self.comp_score_turtle.penup()
+        self.comp_score_turtle.hideturtle()
+        corner = self.n * self.square_size / 2
+        self.comp_score_turtle.goto(-corner, corner + 5)
+
+        # Write computer's score on screen
+        comp_score_string = "Computer score: {}".format(self.count_tiles("white"))
+        self.comp_score_turtle.write(comp_score_string, font = ("Arial", 14, "bold"))
+
+        # Move turtle to top right corner
+        self.player_score_turtle.penup()
+        self.player_score_turtle.hideturtle()
+        self.player_score_turtle.goto(corner, corner + 5)
+
+        # Write player's score on screen
+        player_score_string = "Player score: {}".format(self.count_tiles("black"))
+        self.player_score_turtle.write(player_score_string, align = "right", font = ("Arial", 14, "bold"))
+
+    def update_turn_display(self):
+        '''
+        name: update_turn_display
+        inputs: self (Game object)
+        returns: nothing
+        does: Writes who's turn it is (player or computer) at the top of turtle window
+        '''
+        # Erase previous turn message
+        self.turn_turtle.undo()
+        self.turn_turtle.hideturtle()
+
+        # Move turtle to center of screen, above board
+        self.turn_turtle.penup()
+        self.turn_turtle.goto(0, self.n * self.square_size / 2 + 20)
+
+        # Set message to display based on who's turn it is
+        message = ""
+        if self.is_player_turn and  not self.is_game_over:
+            message = "Your Turn"
+        elif not self.is_player_turn and not self.is_game_over:
+            message = "Computer's Turn"
+        else:
+            message = "Game Over"
+
+        # Write the message at the current turtle location
+        self.turn_turtle.write(message, align = "center", font = ("Arial", 18, "bold"))
+        
+    
+    def count_tiles(self, color):
+        '''
+        name: count_tiles
+        inputs: self (Game) and color (String representing color of desired tiles)
+        returns: number of tiles of the input color as an int
+        does: counts the number of tiles of an input color currently in the game
+        '''
+        total = 0
+        for tile in self.tiles:
+            if tile.color == color:
+                total += 1
+        return total
+    
     def draw_lines(self, turt):
         '''
         name: draw_lines
@@ -201,6 +279,12 @@ class Game:
 
             # Draw tile on board
             self.draw_tile(new_tile)
+            
+        # Write scores above board
+        self.update_turn_display()
+        self.update_scores()
+
+
 
 
     def determine_turn(self):
@@ -219,11 +303,10 @@ class Game:
            and self.is_player_turn:
             # Initiate player turn
             print("Player's Turn")
+            self.update_turn_display()
             turtle.onscreenclick(self.player_move)
             return "Player Turn Over"
 
-        # Wait one second    
-        time.sleep(1)
         # Find computer's legal moves
         legal_comp_moves = self.find_legal_moves('white')
         
@@ -242,12 +325,14 @@ class Game:
             # Initiate player turn
             print("Player's Turn")
             self.is_player_turn = True
+            self.update_turn_display()
             turtle.onscreenclick(self.player_move)
             return "Player Turn Over"  
         # Otherwise end game
         else:
             # Change game's is_game_over property to True
             self.is_game_over = True
+            self.update_turn_display()
             # Close turtle window
             turtle.bye()
             return "Game Over"
@@ -260,6 +345,7 @@ class Game:
         does: Draws a tile of the appropriate color in a square that the user
         clicks on if the move is valid and on the board
         '''
+        
         # Find legal moves
         legal_moves = self.find_legal_moves('black')
 
@@ -284,6 +370,9 @@ class Game:
                     # Flip necessary tiles
                     move_index = legal_moves.index(move)
                     self.flip_tiles(legal_moves[move_index])
+            
+                    # Update scores
+                    self.update_scores()
 
                     # End player turn
                     self.is_player_turn = False
@@ -470,12 +559,17 @@ class Game:
         returns: nothing
         does: Makes "best" move for computer
         '''
-
+        # Update turn display
+        self.update_turn_display()
+        
         # Find best move for computer
         move = self.determine_best_move(legal_moves)
 
         # Append move's tile to list of game tiles
         self.tiles.append(move.tile)
+
+        # Add time delay
+        time.sleep(2)
         
         # Draw new move's tile on board
         self.draw_tile(move.tile)
@@ -483,6 +577,9 @@ class Game:
         # Flip appropriate tiles
         self.flip_tiles(move)
 
+        # Update the scores
+        self.update_scores()
+        
         # Set is player turn property to True
         self.is_player_turn = True
 
@@ -499,16 +596,9 @@ class Game:
         does: Prints the score of the game and the winner of the game 
         '''
 
-        # Initialize score counters
-        black_count = 0
-        white_count = 0
-
-        # Count number of black and white tiles
-        for tile in self.tiles:
-            if tile.color == "black":
-                black_count += 1
-            else:
-                white_count += 1
+        # Count the number of black and white tiles
+        black_count = self.count_tiles("black")
+        white_count = self.count_tiles("white")
         score_string = "Final Score: Black {} to White {}".format(black_count,\
                                                                   white_count)
 
