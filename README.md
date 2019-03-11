@@ -7,9 +7,9 @@ This repository contains a single player  version of the board game Othello, whi
 # The Rules
 Similar to checkers, Othello is a game that involves using two different colored tiles (one for each player). When a tile of one color is sandwiched between two tiles of the opposite color, its color flips to the opposite color.
 
-<img align="center" src="https://i.imgur.com/paxUkeb.png" alt="Player Move" width=30% height=30%>
+<img align="center" src="https://i.imgur.com/paxUkeb.png" alt="Player Move" width=50% height=50%>
 
-<img align="center" src="https://i.imgur.com/HYDg1Fo.png" alt="Computer Move" width=30% height=30%>
+<img align="center" src="https://i.imgur.com/HYDg1Fo.png" alt="Computer Move" width=50% height=50%>
 
  The objective of the game is to flip the color of as many of the opposing player's tiles as possible. The game ends when there are no legal moves left on the board for either player. The player with the most tiles of his/her color on the board wins.
 
