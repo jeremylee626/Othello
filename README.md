@@ -15,7 +15,7 @@ Similar to checkers, Othello is a game that involves using two different colored
 The objective of the game is to flip the color of as many of the opposing player's tiles as possible. The game ends when there are no legal moves left on the board for either player. The player with the most tiles of his/her color on the board wins.
 
 <p align="center">
-	<img src="https://i.imgur.com/jeeeUCR.png" alt="Game Over" widht=10% height=10%>
+	<img src="https://i.imgur.com/jeeeUCR.png" alt="Game Over" width=30% height=30%>
 </p>
 
 # How the AI Works
