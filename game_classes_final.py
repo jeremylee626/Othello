@@ -569,7 +569,7 @@ class Game:
         self.tiles.append(move.tile)
 
         # Add time delay
-        time.sleep(2)
+        time.sleep(30)
         
         # Draw new move's tile on board
         self.draw_tile(move.tile)
