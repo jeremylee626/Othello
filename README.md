@@ -1,6 +1,6 @@
-#Python Othello with Smart AI
+# Python Othello with Smart AI
 
-<img align="center" src="https://i.imgur.com/1mrEcB0.png" alt="Othello Board">
+<img align="center" src="https://i.imgur.com/1mrEcB0.png" alt="Othello Board" width=30% height=30%>
 
 This repository contains a single player  version of the board game Othello, which was created using Python with the turtle graphics library. The player plays against the computer, which has been programmed to pick the "optimal" move at each of its turns. 
 
